@@ -1,0 +1,57 @@
+### GET RIDER COORDINATES
+GET http://localhost:3000/riders/coordinates/1
+
+### POST RIDER COORDINATES
+POST http://localhost:3000/riders/coordinates
+Content-Type: application/json
+
+{
+    "lat": 3333.23,
+    "lng": 333333.23,
+    "rider": 1
+}
+
+### CREATE RIDER
+POST http://localhost:3000/riders
+Content-Type: application/json
+
+{
+    "firstName": "Polaa",
+    "lastName": "Smith",
+    "email" : "plat@gmail.com"
+
+}
+
+
+### API GATEWAY
+GET http://localhost:3000/riders/2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjYsImVtYWlsIjoibWFsaWtfa2hhbkBnbWFpbC5jb20iLCJpYXQiOjE3NDI2ODMxMDIsImV4cCI6MTc0MjY4NjcwMn0.QnokJL4mtqZ0gRZjRIrUK8FkLmwt__kSB5gHQxltiMg
+
+### AUTH ROUTES
+
+### Signup
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+    "firstName": "Malik",
+    "lastName": "Khan",
+    "email": "malik_khan@gmail.com",
+    "password": "123123adasd"
+}
+
+### Login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+   "email": "malik_khan@gmail.com",
+    "password": "123123adasd"
+}
+
+
+
+### Profile
+GET http://localhost:3000/auth/profile
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImVtYWlsIjoibmV3X3VzZXIxMzY0MkBnbWFpbC5jb20iLCJpYXQiOjE3NDI1OTY1NjUsImV4cCI6MTc0MjYwMDE2NX0.9HZZ50KmakR94bxUfRfvp8qeYgm2Dletcx4ka93Xl5g
