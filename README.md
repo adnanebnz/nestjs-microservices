@@ -18,6 +18,7 @@
 - [Testing](#testing)
 - [Project Structure](#project-structure)
 - [Database Schema](#database-schema)
+- [Redis Communication Patterns](#redis-communication-patterns)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -30,7 +31,7 @@ This project demonstrates a microservices architecture using NestJS, consisting 
 - **Rider Service**: Handles rider profile management and operations
 - **Logging Service**: Centralized logging system for tracking rider coordinates
 
-The services communicate with each other using RabbitMQ message broker, implementing both synchronous and asynchronous communication patterns.
+The services communicate with each other using Redis as a message broker, implementing both synchronous and asynchronous communication patterns.
 
 ![Architecture Diagram](https://via.placeholder.com/800x400?text=Microservices+Architecture+Diagram)
 
@@ -39,9 +40,9 @@ The services communicate with each other using RabbitMQ message broker, implemen
 - **Microservice Architecture**: Modular, scalable design with separate concerns
 - **API Gateway Pattern**: Single entry point for all client requests
 - **Authentication & Authorization**: JWT-based auth with role-based access control
-- **Message Queue Integration**: RabbitMQ for inter-service communication
+- **Redis-based Communication**: Services communicate using Redis pub/sub and message patterns
 - **Multiple Databases**: MongoDB for logs, PostgreSQL for rider and auth data
-- **Cache Layer**: Redis for improved performance
+- **Cache Layer**: Redis for improved performance and communication
 - **Docker Support**: Containerized development and deployment
 - **Swagger Documentation**: API endpoints documentation
 
@@ -58,8 +59,8 @@ The services communicate with each other using RabbitMQ message broker, implemen
 - **Databases**:
   - MongoDB (for logging service)
   - PostgreSQL (for authentication and rider services)
-  - Redis (for caching)
-- **Message Broker**: RabbitMQ
+  - Redis (for inter-service communication and caching)
+- **Message Broker**: Redis (using NestJS Microservices Transport)
 - **Containerization**: Docker & Docker Compose
 - **API Documentation**: Swagger
 - **Authentication**: JWT, Passport
@@ -87,7 +88,7 @@ npm install
 docker-compose up -d
 ```
 
-This will start MongoDB, PostgreSQL, Redis, and RabbitMQ services.
+This will start MongoDB, PostgreSQL, and Redis services as defined in the docker-compose.yml file.
 
 ## 🚀 Running the Services
 
@@ -114,9 +115,9 @@ Alternatively, you can open multiple terminal windows and run each service separ
 ### Service Ports
 
 - API Gateway: http://localhost:3000
-- Authentication Service: http://localhost:3001
-- Rider Service: http://localhost:3002
-- Logging Service: http://localhost:3003
+- Authentication Service: http://localhost:3001 (internally using Redis)
+- Rider Service: http://localhost:3002 (internally using Redis)
+- Logging Service: http://localhost:3003 (internally using Redis)
 
 ## 📝 API Documentation
 
@@ -231,6 +232,47 @@ nestjs-microservice/
 ### Logging Service (MongoDB)
 
 - RiderCoordinates collection: Stores location tracking data
+
+## 🔄 Redis Communication Patterns
+
+In this architecture, Redis serves as the key communication mechanism between the microservices:
+
+### Message Patterns
+
+1. **Request-Response (Synchronous Communication)**
+   - The API Gateway sends commands to the appropriate service
+   - Each microservice listens for specific commands on its Redis channel
+   - Example: When a client requests rider information, the API Gateway sends a `{cmd: 'get-rider'}` message to the Rider service
+
+2. **Event-Based (Asynchronous Communication)**
+   - Services can emit events that other services can react to
+   - Example: When a new rider is created in the Authentication service, it emits an event that the Rider service consumes
+
+### Service Communication Flow
+
+1. **API Gateway to Authentication Service**
+   - Handles user registration and login requests
+   - Commands: `register`, `login`, `validate-token`
+
+2. **API Gateway to Rider Service**
+   - Manages rider information
+   - Commands: `get-rider`, `create-rider`
+
+3. **API Gateway to Logging Service**
+   - Tracks rider coordinates
+   - Commands: `saveRiderCoordinates`, `getRiderCoordinates`
+
+4. **Authentication Service to Rider Service**
+   - Creates rider profiles after user registration
+   - Command: `create-rider`
+
+### Benefits of Redis Communication
+
+- **Low Latency**: Redis provides fast message delivery
+- **Reliable Messaging**: Messages are stored until consumed
+- **Scalability**: Multiple instances of services can consume from the same queue
+- **Decoupling**: Services can evolve independently
+- **Resilience**: If a service is temporarily down, messages are preserved
 
 ## 🤝 Contributing
 

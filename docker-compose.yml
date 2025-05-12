@@ -20,18 +20,6 @@ services:
     volumes:
       - mongo_data:/data/db
 
-  rabbitmq:
-    image: rabbitmq
-    restart: always
-    ports:
-      - 5672:5672
-      - 15672:15672
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
-
   postgres_rider:
     image: postgres
     restart: always
@@ -57,7 +45,6 @@ services:
       - postgres_auth_data:/var/lib/postgresql/data
 volumes:
   mongo_data:
-  rabbitmq_data:
   postgres_auth_data:
   postgres_rider_data:
   redis_data:
