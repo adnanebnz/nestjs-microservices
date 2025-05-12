@@ -1,6 +1,5 @@
 version: '3.1'
 
-# MongoDB, Postgres, Redis, Elasticsearch, Kibana, Mysql, Postgres
 services:
   redis:
     image: redis:alpine
@@ -19,7 +18,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - mongo_data:/data/db # Persistent storage for MongoDB
+      - mongo_data:/data/db
 
   rabbitmq:
     image: rabbitmq
@@ -31,7 +30,7 @@ services:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
     volumes:
-      - rabbitmq_data:/var/lib/rabbitmq # Persistent storage for RabbitMQ
+      - rabbitmq_data:/var/lib/rabbitmq
 
   postgres_rider:
     image: postgres
@@ -39,11 +38,11 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
-      POSTGRES_DB: riders_db # Change this to your preferred database name
+      POSTGRES_DB: riders_db
     ports:
-      - 5433:5432 # PostgreSQL default port
+      - 5433:5432
     volumes:
-      - postgres_rider_data:/var/lib/postgresql/data # Persistent storage for PostgreSQL
+      - postgres_rider_data:/var/lib/postgresql/data
 
   postgres_auth:
     image: postgres
@@ -57,8 +56,8 @@ services:
     volumes:
       - postgres_auth_data:/var/lib/postgresql/data
 volumes:
-  mongo_data: # Named volume for MongoDB
-  rabbitmq_data: # Named volume for RabbitMQ
+  mongo_data:
+  rabbitmq_data:
   postgres_auth_data:
   postgres_rider_data:
-  redis_data: # Named volume for Redis
+  redis_data:

@@ -1,73 +1,247 @@
+# NestJS Microservice Architecture
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<p align="center">A comprehensive microservices architecture built with NestJS, implementing a ride-sharing platform with multiple services.</p>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 📚 Table of Contents
 
-## Description
+- [Architecture Overview](#architecture-overview)
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Technology Stack](#technology-stack)
+- [Installation](#installation)
+- [Running the Services](#running-the-services)
+- [API Documentation](#api-documentation)
+- [Testing](#testing)
+- [Project Structure](#project-structure)
+- [Database Schema](#database-schema)
+- [Contributing](#contributing)
+- [License](#license)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🏗️ Architecture Overview
 
-## Installation
+This project demonstrates a microservices architecture using NestJS, consisting of the following services:
+
+- **API Gateway**: Entry point for all client requests, handles routing and authentication verification
+- **Authentication Service**: Manages user registration, login, and JWT token generation
+- **Rider Service**: Handles rider profile management and operations
+- **Logging Service**: Centralized logging system for tracking rider coordinates
+
+The services communicate with each other using RabbitMQ message broker, implementing both synchronous and asynchronous communication patterns.
+
+![Architecture Diagram](https://via.placeholder.com/800x400?text=Microservices+Architecture+Diagram)
+
+## ✨ Features
+
+- **Microservice Architecture**: Modular, scalable design with separate concerns
+- **API Gateway Pattern**: Single entry point for all client requests
+- **Authentication & Authorization**: JWT-based auth with role-based access control
+- **Message Queue Integration**: RabbitMQ for inter-service communication
+- **Multiple Databases**: MongoDB for logs, PostgreSQL for rider and auth data
+- **Cache Layer**: Redis for improved performance
+- **Docker Support**: Containerized development and deployment
+- **Swagger Documentation**: API endpoints documentation
+
+## 📋 Prerequisites
+
+- Node.js (v16+)
+- Docker and Docker Compose
+- pnpm (or npm/yarn)
+
+## 🛠️ Technology Stack
+
+- **Framework**: NestJS
+- **Language**: TypeScript
+- **Databases**:
+  - MongoDB (for logging service)
+  - PostgreSQL (for authentication and rider services)
+  - Redis (for caching)
+- **Message Broker**: RabbitMQ
+- **Containerization**: Docker & Docker Compose
+- **API Documentation**: Swagger
+- **Authentication**: JWT, Passport
+
+## 📥 Installation
+
+1. Clone the repository:
 
 ```bash
-$ npm install
+git clone https://github.com/your-username/nestjs-microservice.git
+cd nestjs-microservice
 ```
 
-## Running the app
+2. Install dependencies:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+pnpm install
+# or
+npm install
 ```
 
-## Test
+3. Start the required infrastructure services using Docker:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker-compose up -d
 ```
 
-## Support
+This will start MongoDB, PostgreSQL, Redis, and RabbitMQ services.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## 🚀 Running the Services
 
-## Stay in touch
+### Starting All Microservices
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+You can start all microservices in development mode with:
 
-## License
+```bash
+# Start the authentication service
+pnpm run start:dev authentication
 
-Nest is [MIT licensed](LICENSE).
+# Start the rider service
+pnpm run start:dev rider
+
+# Start the logging service
+pnpm run start:dev logging
+
+# Start the API gateway (start this last)
+pnpm run start:dev api-gateway
+```
+
+Alternatively, you can open multiple terminal windows and run each service separately for better log visibility.
+
+### Service Ports
+
+- API Gateway: http://localhost:3000
+- Authentication Service: http://localhost:3001
+- Rider Service: http://localhost:3002
+- Logging Service: http://localhost:3003
+
+## 📝 API Documentation
+
+Once the services are running, you can access the Swagger API documentation at:
+
+- API Gateway: http://localhost:3000/api
+- Authentication Service: http://localhost:3001/api
+- Rider Service: http://localhost:3002/api
+- Logging Service: http://localhost:3003/api
+
+## 🧪 Mock HTTP Requests
+
+Here are some example requests to test the system:
+
+### Authentication Service
+
+#### Register a new user
+
+```bash
+curl -X POST http://localhost:3000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "password123",
+    "fullName": "Test User"
+  }'
+```
+
+#### Login
+
+```bash
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "password123"
+  }'
+```
+
+This will return a JWT token that you'll use for authenticated requests.
+
+### Rider Service
+
+#### Create a new rider (requires authentication)
+
+```bash
+curl -X POST http://localhost:3000/riders \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{
+    "name": "Rider Name",
+    "email": "rider@example.com",
+    "phoneNumber": "1234567890"
+  }'
+```
+
+#### Get all riders (requires authentication)
+
+```bash
+curl -X GET http://localhost:3000/riders \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+```
+
+### Logging Service
+
+#### Log rider coordinates (requires authentication)
+
+```bash
+curl -X POST http://localhost:3000/logging/rider-coordinates \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -d '{
+    "riderId": "1",
+    "latitude": 40.7128,
+    "longitude": -74.0060,
+    "timestamp": "2025-05-12T12:00:00Z"
+  }'
+```
+
+#### Get rider coordinates history (requires authentication)
+
+```bash
+curl -X GET http://localhost:3000/logging/rider-coordinates/1 \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+```
+
+## 📁 Project Structure
+
+```
+nestjs-microservice/
+├── apps/
+│   ├── api-gateway/           # API Gateway microservice
+│   ├── authentication/        # Authentication microservice
+│   ├── logging/               # Logging microservice
+│   └── rider/                 # Rider microservice
+├── docker-compose.yml         # Docker services configuration
+├── nest-cli.json              # NestJS CLI configuration
+├── package.json               # Project dependencies and scripts
+└── README.md                  # Project documentation
+```
+
+## 💾 Database Schema
+
+### Authentication Service (PostgreSQL)
+
+- Users table: Stores user credentials and profile information
+
+### Rider Service (PostgreSQL)
+
+- Riders table: Stores rider profile information
+
+### Logging Service (MongoDB)
+
+- RiderCoordinates collection: Stores location tracking data
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is [MIT licensed](LICENSE).
