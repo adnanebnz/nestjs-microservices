@@ -1,0 +1,108 @@
+@startuml NestJS Microservices Architecture
+
+' Define custom styles and colors
+!define MICROSERVICE stereotype=rectangle
+!define DATABASE stereotype=database
+!define CLIENT stereotype=actor
+!define MESSAGE stereotype=arrow
+skinparam componentStyle rectangle
+skinparam backgroundColor white
+skinparam titleFontSize 20
+skinparam defaultFontSize 13
+
+skinparam component {
+    BackgroundColor #FEFECE
+    BorderColor #999999
+    FontColor #333333
+}
+
+skinparam database {
+    BackgroundColor #ECF0F1
+    BorderColor #666666
+    FontColor #333333
+}
+
+skinparam arrow {
+    Color #555555
+    FontColor #333333
+}
+
+' Title
+title NestJS Microservices with Redis Communication
+
+' Define components
+rectangle "Client Applications" as client {
+    [Mobile App]
+    [Web App]
+}
+
+rectangle "API Gateway" as gateway {
+    component [Authentication Verification] as auth_verify
+    component [Request Routing] as routing
+    component [Response Handling] as response
+}
+
+package "Microservices" {
+    rectangle "Authentication\nService" as auth_service {
+        component [JWT Generation] as jwt
+        component [User Management] as user_mgmt
+    }
+
+    rectangle "Rider\nService" as rider_service {
+        component [Profile Management] as profile
+        component [Rider Operations] as rider_ops
+    }
+
+    rectangle "Logging\nService" as logging_service {
+        component [Coordinate Tracking] as tracking
+        component [History Retrieval] as history
+    }
+}
+
+database "PostgreSQL\nAuth DB" as pg_auth {
+    [Users Table]
+}
+
+database "PostgreSQL\nRider DB" as pg_rider {
+    [Riders Table]
+}
+
+database "MongoDB\nLogging DB" as mongo_logging {
+    [Coordinates Collection]
+}
+
+cloud "Redis" as redis {
+    component [Message Broker] as broker
+    component [Caching] as cache
+}
+
+' Define relationships
+client -down-> gateway : HTTP Requests
+
+gateway -down-> redis : Message\nPublishing
+auth_service -up-> redis : Message\nConsumption
+rider_service -up-> redis : Message\nConsumption
+logging_service -up-> redis : Message\nConsumption
+
+auth_service -down-> pg_auth : CRUD Operations
+rider_service -down-> pg_rider : CRUD Operations
+logging_service -down-> mongo_logging : CRUD Operations
+
+auth_service -right-> redis : Publish\nEvents
+rider_service -left-> redis : Consume\nEvents
+
+' Add notes explaining communication patterns
+note right of redis
+  **Message Patterns:**
+  1. Request-Response: {cmd: 'command-name'}
+  2. Event-Based: emit/on events
+end note
+
+note bottom of gateway
+  **API Gateway Commands:**
+  - Auth: register, login, validate-token
+  - Rider: get-rider, create-rider
+  - Logging: saveRiderCoordinates, getRiderCoordinates
+end note
+
+@enduml

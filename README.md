@@ -33,7 +33,7 @@ This project demonstrates a microservices architecture using NestJS, consisting 
 
 The services communicate with each other using Redis as a message broker, implementing both synchronous and asynchronous communication patterns.
 
-![Architecture Diagram](https://via.placeholder.com/800x400?text=Microservices+Architecture+Diagram)
+![NestJS Microservices Architecture](./assets/image.png)
 
 ## ✨ Features
 
@@ -240,6 +240,7 @@ In this architecture, Redis serves as the key communication mechanism between th
 ### Message Patterns
 
 1. **Request-Response (Synchronous Communication)**
+
    - The API Gateway sends commands to the appropriate service
    - Each microservice listens for specific commands on its Redis channel
    - Example: When a client requests rider information, the API Gateway sends a `{cmd: 'get-rider'}` message to the Rider service
@@ -251,14 +252,17 @@ In this architecture, Redis serves as the key communication mechanism between th
 ### Service Communication Flow
 
 1. **API Gateway to Authentication Service**
+
    - Handles user registration and login requests
    - Commands: `register`, `login`, `validate-token`
 
 2. **API Gateway to Rider Service**
+
    - Manages rider information
    - Commands: `get-rider`, `create-rider`
 
 3. **API Gateway to Logging Service**
+
    - Tracks rider coordinates
    - Commands: `saveRiderCoordinates`, `getRiderCoordinates`
 
