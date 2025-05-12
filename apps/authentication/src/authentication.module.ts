@@ -11,13 +11,14 @@ import { User } from './entities/user.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '5432', 10),
-      username: process.env.DB_USERNAME || 'postgres',
-      password: process.env.DB_PASSWORD || 'postgres',
-      database: process.env.DB_DATABASE || 'authentication',
-      entities: [User],
-      synchronize: true, // Set to false in production
+      host: 'localhost',
+      port: 5434,
+      username: 'postgres',
+      password: 'root',
+      database: 'auth_db',
+      autoLoadEntities: true,
+      synchronize: true,
+      logging: true,
     }),
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
@@ -27,13 +28,10 @@ import { User } from './entities/user.entity';
     ClientsModule.register([
       {
         name: 'RIDER_SERVICE',
-        transport: Transport.RMQ,
+        transport: Transport.REDIS,
         options: {
-          urls: ['amqp://localhost:5672'],
-          queue: 'rider_queue',
-          queueOptions: {
-            durable: false,
-          },
+          host: 'localhost',
+          port: 6379,
         },
       },
     ]),

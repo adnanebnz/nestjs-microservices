@@ -16,13 +16,10 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
     ClientsModule.register([
       {
         name: 'RIDER_SERVICE',
-        transport: Transport.RMQ,
+        transport: Transport.REDIS,
         options: {
-          urls: ['amqp://localhost:5672'],
-          queue: 'rider_queue',
-          queueOptions: {
-            durable: false,
-          },
+          host: 'localhost',
+          port: 6379,
         },
       },
     ]),

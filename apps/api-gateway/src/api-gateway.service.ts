@@ -15,23 +15,17 @@ export class ApiGatewayService {
 
   constructor() {
     this.riderService = ClientProxyFactory.create({
-      transport: Transport.RMQ,
+      transport: Transport.REDIS,
       options: {
-        urls: ['amqp://localhost:5672'],
-        queue: 'rider_queue',
-        queueOptions: {
-          durable: false,
-        },
+        host: 'localhost',
+        port: 6379,
       },
     });
     this.riderCoordinatesService = ClientProxyFactory.create({
-      transport: Transport.RMQ,
+      transport: Transport.REDIS,
       options: {
-        urls: ['amqp://localhost:5672'],
-        queue: 'rider_coordinates_queue',
-        queueOptions: {
-          durable: false,
-        },
+        host: 'localhost',
+        port: 6379,
       },
     });
   }

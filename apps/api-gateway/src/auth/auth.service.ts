@@ -12,11 +12,10 @@ export class AuthService {
 
   constructor() {
     this.client = ClientProxyFactory.create({
-      transport: Transport.RMQ,
+      transport: Transport.REDIS,
       options: {
-        urls: ['amqp://localhost:5672'],
-        queue: 'auth_queue',
-        queueOptions: { durable: false },
+        host: 'localhost',
+        port: 6379,
       },
     });
   }

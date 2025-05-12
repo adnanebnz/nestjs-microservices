@@ -10,13 +10,10 @@ async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AuthenticationModule,
     {
-      transport: Transport.RMQ,
+      transport: Transport.REDIS,
       options: {
-        urls: ['amqp://localhost:5672'],
-        queue: 'auth_queue',
-        queueOptions: {
-          durable: false,
-        },
+        host: 'localhost',
+        port: 6379,
       },
     },
   );

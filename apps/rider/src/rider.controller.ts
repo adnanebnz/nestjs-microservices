@@ -4,7 +4,7 @@ import {
   Ctx,
   MessagePattern,
   Payload,
-  RmqContext,
+  RedisContext,
 } from '@nestjs/microservices';
 import { CreateRiderDTO } from './dto/create-rider.dto';
 import { Rider } from './rider.entity';
@@ -18,7 +18,7 @@ export class RiderController {
     @Payload()
     data: CreateRiderDTO,
     @Ctx()
-    context: RmqContext,
+    context: RedisContext,
   ): Promise<Rider> {
     console.log('data', data);
     return this.riderService.create(data);
@@ -29,7 +29,7 @@ export class RiderController {
     @Payload()
     data: any,
     @Ctx()
-    context: RmqContext,
+    context: RedisContext,
   ) {
     return await this.riderService.findById(data.id);
   }
